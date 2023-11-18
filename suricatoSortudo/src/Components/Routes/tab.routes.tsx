@@ -1,45 +1,23 @@
-import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
-import Login from "../../Pages/Login";
 import Home from "../../Pages/Home";
 import Produtos from "../../Pages/Produtos";
 import Integrantes from "../../Pages/Integrantes";
 
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 const Tab = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
 
-export default function AppRoutes() {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        drawerActiveBackgroundColor: "#0c432e",
-        drawerInactiveBackgroundColor: "#0c432e",
-        drawerActiveTintColor: "#bd7834",
-        drawerInactiveTintColor: "white",
-      }}
-    >
-      <Drawer.Screen name="Home" component={TabNavigate} />
-      <Drawer.Screen name="Produtos" component={TabNavigate} />
-      <Drawer.Screen name="Integrantes" component={TabNavigate} />
-    </Drawer.Navigator>
-  );
-}
-
-export const TabNavigate = () => {
+export default function TabNavigate() {
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: "#bd7834",
+        headerShown: false,
       }}
     >
-      <Drawer.Screen
-        name="Home"
+      <Tab.Screen
+        name="Início"
         component={Home}
         options={{
           tabBarIcon: ({ color }) => (
@@ -51,7 +29,7 @@ export const TabNavigate = () => {
           tabBarInactiveBackgroundColor: "#0c432e",
         }}
       />
-      <Drawer.Screen
+      <Tab.Screen
         name="Produtos"
         component={Produtos}
         options={{
@@ -64,7 +42,7 @@ export const TabNavigate = () => {
           tabBarInactiveBackgroundColor: "#0c432e",
         }}
       />
-      <Drawer.Screen
+      <Tab.Screen
         name="Integrantes"
         component={Integrantes}
         options={{
@@ -79,6 +57,4 @@ export const TabNavigate = () => {
       />
     </Tab.Navigator>
   );
-};
-
-const styles = StyleSheet.create({});
+}
