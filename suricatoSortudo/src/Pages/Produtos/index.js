@@ -5,7 +5,7 @@ import {
   View,
   TextInput,
   Image,
-  ScrollView,
+  FlatList,
   TouchableOpacity,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -33,8 +33,10 @@ export default function Produtos() {
     buscarProduto();
   }, []);
 
-  const produtosFiltrados = produtos.filter((produto) =>
-    produto.nome.toLowerCase().includes(pesquisa.toLowerCase())
+  const produtosFiltrados = produtos.filter(
+    (produto) =>
+      produto.nome &&
+      produto.nome.toLowerCase().includes(pesquisa.toLowerCase())
   );
 
   const handleProdutoDetalhe = (produto) => {
@@ -47,8 +49,40 @@ export default function Produtos() {
     setProdutoSelecionado(null);
   };
 
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.container2}
+      onPress={() => handleProdutoDetalhe(item)}
+    >
+      <Image style={styles.imagemProduto} source={{ uri: item.imagem }} />
+      <View style={styles.textoContainer}>
+        <Text style={styles.texto}>{item.nome}</Text>
+        <Text style={styles.texto}>R$ {item.valor}</Text>
+        <View style={styles.iconesContainer}>
+          <TouchableOpacity style={styles.botao2}>
+            <FontAwesome name="trash" size={30} color="white" padding={8} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botao2}>
+            <FontAwesome
+              name="edit"
+              size={30}
+              color="white"
+              padding={8}
+              textAlign="center"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <ModalDetalhes
+        isVisible={modalVisivel}
+        produto={produtoSelecionado}
+        onClose={fecharModalDetalhes}
+      />
+    </TouchableOpacity>
+  );
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         value={pesquisa}
@@ -63,44 +97,26 @@ export default function Produtos() {
         </Text>
       </TouchableOpacity>
 
-      {produtosFiltrados.map((produto) => (
-        <TouchableOpacity
-          key={produto.id}
-          style={styles.container2}
-          onPress={() => handleProdutoDetalhe(produto)}
-        >
-          <Image
-            style={styles.imagemProduto}
-            source={{ uri: produto.imagem }}
-          />
-          <View style={styles.textoContainer}>
-            <Text style={styles.texto}>{produto.nome}</Text>
-            <Text style={styles.texto}>R$ {produto.valor}</Text>
-            <View style={styles.iconesContainer}>
-              <FontAwesome name="trash" size={35} color="#0C432E" />
-              <FontAwesome name="edit" size={35} color="#0C432E" />
-            </View>
-          </View>
-          <ModalDetalhes
-            isVisible={modalVisivel}
-            produto={produtoSelecionado}
-            onClose={fecharModalDetalhes}
-          />
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+      <FlatList
+        data={produtosFiltrados}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.flatlist}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
     backgroundColor: "#BD7834",
     justifyContent: "center",
   },
   container2: {
     flexDirection: "row",
-    width: "90%",
+    width: "100%",
     alignItems: "center",
     backgroundColor: "#D4BF6A",
     marginVertical: 10,
@@ -130,10 +146,8 @@ const styles = StyleSheet.create({
   },
   iconesContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 15,
-    padding: 15,
   },
   texto: {
     fontSize: 18,
@@ -156,5 +170,18 @@ const styles = StyleSheet.create({
     height: 45,
     marginBottom: 10,
     borderRadius: 20,
+  },
+  botao2: {
+    backgroundColor: "#0C432E",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 5,
+    borderRadius: 20,
+    padding: 10,
+    width: 55,
+  },
+  flatlist: {
+    width: "90%",
   },
 });
