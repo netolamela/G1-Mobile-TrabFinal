@@ -72,7 +72,6 @@ export default function Produtos() {
           <Image
             style={styles.imagemProduto}
             source={{ uri: produto.imagem }}
-            onPress={() => handleProdutoDetalhe(produto)}
           />
           <View style={styles.textoContainer}>
             <Text style={styles.texto}>{produto.nome}</Text>

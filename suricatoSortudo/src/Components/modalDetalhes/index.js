@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
-import { FontAwesome } from "@expo/vector-icons";
 
 const ProdutoModal = ({ isVisible, produto, onClose }) => {
   return (
@@ -17,14 +16,8 @@ const ProdutoModal = ({ isVisible, produto, onClose }) => {
             <Text style={styles.modalTexto}>{produto.descricao}</Text>
             <Text style={styles.modalTexto}>{produto.categoria}</Text>
             <Text style={styles.modalTexto}>R$ {produto.valor}</Text>
-            <View style={styles.iconesContainer}>
-              <TouchableOpacity onPress={handleDelete}>
-                <FontAwesome name="trash" size={35} color="#0C432E" />
-              </TouchableOpacity>
-              <FontAwesome name="edit" size={35} color="#0C432E" />
-            </View>
 
-            <TouchableOpacity style={styles.botao}>
+            <TouchableOpacity style={styles.botao} onPress={onClose}>
               <Text style={styles.textoBotao}>Fechar</Text>
             </TouchableOpacity>
           </>
@@ -56,13 +49,6 @@ const styles = {
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
-  },
-  iconesContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginHorizontal: 15,
-    padding: 15,
   },
   textoBotao: {
     fontSize: 20,
