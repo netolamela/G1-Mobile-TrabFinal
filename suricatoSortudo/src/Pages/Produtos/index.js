@@ -10,11 +10,13 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import ModalDetalhes from "../../Components/modalDetalhes";
+import ModalAddProduto from "../../Components/modalAddProduto";
 
 export default function Produtos() {
   const [pesquisa, setPesquisa] = useState("");
   const [produtos, setProdutos] = useState([]);
-  const [modalVisivel, setModalVisivel] = useState(false);
+  const [modalDetalheVisivel, setModalDetalheVisivel] = useState(false);
+  const [modalAddVisivel, setModalAddVisivel] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
 
   useEffect(() => {
@@ -41,12 +43,22 @@ export default function Produtos() {
 
   const handleProdutoDetalhe = (produto) => {
     setProdutoSelecionado(produto);
-    setModalVisivel(true);
+    setModalDetalheVisivel(true);
   };
 
   const fecharModalDetalhes = () => {
-    setModalVisivel(false);
+    setModalDetalheVisivel(false);
     setProdutoSelecionado(null);
+  };
+
+  const handleAdicionarProduto = (novoProduto) => {
+    try {
+      setProdutos((prevProdutos) => [...prevProdutos, novoProduto]);
+      setModalAddVisivel(false);
+      setProdutoSelecionado(null);
+    } catch (error) {
+      alert("Erro ao cadastrar o produto: ", error);
+    }
   };
 
   const renderItem = ({ item }) => (
@@ -74,9 +86,14 @@ export default function Produtos() {
         </View>
       </View>
       <ModalDetalhes
-        isVisible={modalVisivel}
+        isVisible={modalDetalheVisivel}
         produto={produtoSelecionado}
         onClose={fecharModalDetalhes}
+      />
+      <ModalAddProduto
+        isVisible={modalAddVisivel}
+        onClose={() => setModalAddVisivel(false)}
+        onAdicionarProduto={handleAdicionarProduto}
       />
     </TouchableOpacity>
   );
@@ -90,7 +107,10 @@ export default function Produtos() {
         placeholder="Buscar um produto"
       />
       <TouchableOpacity style={styles.botao}>
-        <Text style={styles.textoBotao}>
+        <Text
+          style={styles.textoBotao}
+          onPress={() => setModalAddVisivel(true)}
+        >
           {" "}
           Adicionar Produtos {"   "}
           <FontAwesome name="plus-circle" size={24} color="white" />
