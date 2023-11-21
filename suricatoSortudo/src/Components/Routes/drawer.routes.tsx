@@ -23,7 +23,7 @@ export default function DrawerNavigate() {
         drawerLabelStyle: { marginLeft: -25 },
       }}
       drawerContent={(props) => <CustomDrawer {...props} />}
-      initialRouteName="Login"
+      initialRouteName="Produtos"
     >
       <Drawer.Screen
         name="Login"

@@ -18,6 +18,7 @@ export default function Produtos() {
   const [modalDetalheVisivel, setModalDetalheVisivel] = useState(false);
   const [modalAddVisivel, setModalAddVisivel] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+  //const [produto, setProduto] = useState({});
 
   useEffect(() => {
     const buscarProduto = async () => {
@@ -60,6 +61,23 @@ export default function Produtos() {
       alert("Erro ao cadastrar o produto: ", error);
     }
   };
+  const handleDeleteProduto = async (id) => {
+    try {
+      const response = await fetch(
+        `https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Erro ao deletar o produto");
+      }
+
+      setProdutos(produtos.filter((produto) => produto.id !== id));
+    } catch (error) {
+      alert("Erro ao deletar o produto:", error);
+    }
+  };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -71,7 +89,10 @@ export default function Produtos() {
         <Text style={styles.texto}>{item.nome}</Text>
         <Text style={styles.texto}>R$ {item.valor}</Text>
         <View style={styles.iconesContainer}>
-          <TouchableOpacity style={styles.botao2}>
+          <TouchableOpacity
+            style={styles.botao2}
+            onPress={() => handleDeleteProduto(item.id)}
+          >
             <FontAwesome name="trash" size={30} color="white" padding={8} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.botao2}>
@@ -94,6 +115,8 @@ export default function Produtos() {
         isVisible={modalAddVisivel}
         onClose={() => setModalAddVisivel(false)}
         onAdicionarProduto={handleAdicionarProduto}
+        setProdutos={setProdutos}
+        produtos={produtos}
       />
     </TouchableOpacity>
   );
@@ -120,7 +143,7 @@ export default function Produtos() {
       <FlatList
         data={produtosFiltrados}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item?.id?.toString()}
         style={styles.flatlist}
       />
     </View>
@@ -193,6 +216,7 @@ const styles = StyleSheet.create({
   },
   botao2: {
     backgroundColor: "#0C432E",
+    borderColor: "#0C432E",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
