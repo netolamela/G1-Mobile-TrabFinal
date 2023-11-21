@@ -4,8 +4,6 @@ import uno from "../../assets/img/uno.jpg";
 import batalhaNaval from "../../assets/img/batalhaNaval.jpg";
 import perfil from "../../assets/img/perfil.jpg";
 
-import { MaterialIcons } from "@expo/vector-icons";
-
 const Carrossel = () => {
   const data = [
     { image: uno, title: "Uno" },
@@ -23,8 +21,8 @@ const Carrossel = () => {
     <View>
       <Carousel
         loop
-        width={500}
-        height={500}
+        width={300}
+        height={300}
         autoPlay={true}
         scrollAnimationDuration={1000}
         data={data}
