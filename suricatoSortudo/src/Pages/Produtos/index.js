@@ -18,6 +18,7 @@ export default function Produtos() {
   const [modalDetalheVisivel, setModalDetalheVisivel] = useState(false);
   const [modalAddVisivel, setModalAddVisivel] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+  //const [produto, setProduto] = useState({});
 
   useEffect(() => {
     const buscarProduto = async () => {
@@ -94,6 +95,8 @@ export default function Produtos() {
         isVisible={modalAddVisivel}
         onClose={() => setModalAddVisivel(false)}
         onAdicionarProduto={handleAdicionarProduto}
+        setProdutos={setProdutos}
+        produtos={produtos}
       />
     </TouchableOpacity>
   );
@@ -120,7 +123,7 @@ export default function Produtos() {
       <FlatList
         data={produtosFiltrados}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item?.id?.toString()}
         style={styles.flatlist}
       />
     </View>
@@ -193,6 +196,7 @@ const styles = StyleSheet.create({
   },
   botao2: {
     backgroundColor: "#0C432E",
+    borderColor: "#0C432E",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
