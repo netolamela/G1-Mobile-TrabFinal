@@ -1,0 +1,57 @@
+import { StyleSheet, Text, View, Image } from "react-native";
+import Carousel from "react-native-snap-carousel";
+import uno from "../../assets/img/uno.jpg";
+import batalhaNaval from "../../assets/img/batalhaNaval.jpg";
+import perfil from "../../assets/img/perfil.jpg";
+
+import { MaterialIcons } from "@expo/vector-icons";
+
+const Carrossel = () => {
+  const data = [
+    { image: uno, title: "Uno" },
+    { image: batalhaNaval, title: "Batalha Naval" },
+    { image: perfil, title: "Perfil" },
+  ];
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <Image source={item.image} style={styles.image} />
+      <Text style={styles.title}>{item.title}</Text>
+      <MaterialIcons name="double-arrow" size={24} color="black" />
+    </View>
+  );
+
+  return (
+    <View>
+      <Carousel
+        data={data}
+        renderItem={renderItem}
+        sliderWidth={500}
+        itemWidth={500}
+        loop
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  item: {
+    width: 400,
+    height: 400,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 100,
+    backgroundColor: "#d4bf6a",
+    borderRadius: 10,
+  },
+  image: {
+    width: "100%",
+    height: "80%",
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 18,
+  },
+});
+
+export default Carrossel;
