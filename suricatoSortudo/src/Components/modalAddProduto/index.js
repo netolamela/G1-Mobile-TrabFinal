@@ -10,7 +10,13 @@ import {
 import Modal from "react-native-modal";
 import axios from "axios";
 
-const ModalAddProduto = ({ isVisible, onAdicionarProduto, onClose }) => {
+const ModalAddProduto = ({
+  isVisible,
+  onAdicionarProduto,
+  onClose,
+  setProdutos,
+  produtos,
+}) => {
   const [novoProduto, setNovoProduto] = useState({
     nome: "",
     descricao: "",
@@ -25,7 +31,7 @@ const ModalAddProduto = ({ isVisible, onAdicionarProduto, onClose }) => {
     const trimmedCategoria = novoProduto.categoria.trim();
     const trimmedValor =
       novoProduto.valor !== undefined && novoProduto.valor !== null
-        ? novoProduto.valor.toString().trim()
+        ? String(novoProduto.valor).trim()
         : "";
     const trimmedImagem = novoProduto.imagem.trim();
 
@@ -40,19 +46,22 @@ const ModalAddProduto = ({ isVisible, onAdicionarProduto, onClose }) => {
       return;
     }
 
+    let produto = {
+      nome: trimmedNome,
+      descricao: trimmedDescricao,
+      categoria: trimmedCategoria,
+      valor: parseFloat(trimmedValor.replace(",", ".")),
+      imagem: trimmedImagem,
+    };
+
     try {
       const response = await axios.post(
         "https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos",
-        {
-          nome: trimmedNome,
-          descricao: trimmedDescricao,
-          categoria: trimmedCategoria,
-          valor: parseFloat(trimmedValor.replace(",", ".")),
-          imagem: trimmedImagem,
-        }
+        produto
       );
 
-      // Manipular a resposta da API, se necessário
+      setProdutos([...produtos, produto]);
+
       console.log("Produto cadastrado: ", response.data);
 
       onAdicionarProduto({
