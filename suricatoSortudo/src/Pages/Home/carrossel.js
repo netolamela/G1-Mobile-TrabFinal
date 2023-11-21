@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import Carousel from "react-native-snap-carousel";
+import Carousel from "react-native-reanimated-carousel";
 import uno from "../../assets/img/uno.jpg";
 import batalhaNaval from "../../assets/img/batalhaNaval.jpg";
 import perfil from "../../assets/img/perfil.jpg";

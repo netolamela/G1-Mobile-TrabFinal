@@ -60,6 +60,23 @@ export default function Produtos() {
       alert("Erro ao cadastrar o produto: ", error);
     }
   };
+  const handleDeleteProduto = async (id) => {
+    try {
+      const response = await fetch(
+        `https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Erro ao deletar o produto");
+      }
+
+      setProdutos(produtos.filter((produto) => produto.id !== id));
+    } catch (error) {
+      alert("Erro ao deletar o produto:", error);
+    }
+  };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -71,7 +88,10 @@ export default function Produtos() {
         <Text style={styles.texto}>{item.nome}</Text>
         <Text style={styles.texto}>R$ {item.valor}</Text>
         <View style={styles.iconesContainer}>
-          <TouchableOpacity style={styles.botao2}>
+          <TouchableOpacity
+            style={styles.botao2}
+            onPress={() => handleDeleteProduto(item.id)}
+          >
             <FontAwesome name="trash" size={30} color="white" padding={8} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.botao2}>
