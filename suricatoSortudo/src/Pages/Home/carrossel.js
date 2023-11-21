@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import Carousel from "react-native-snap-carousel";
+import Carousel from "react-native-reanimated-carousel";
 import uno from "../../assets/img/uno.jpg";
 import batalhaNaval from "../../assets/img/batalhaNaval.jpg";
 import perfil from "../../assets/img/perfil.jpg";
@@ -16,18 +16,19 @@ const Carrossel = () => {
     <View style={styles.item}>
       <Image source={item.image} style={styles.image} />
       <Text style={styles.title}>{item.title}</Text>
-      <MaterialIcons name="double-arrow" size={24} color="black" />
     </View>
   );
 
   return (
     <View>
       <Carousel
+        loop
+        width={500}
+        height={500}
+        autoPlay={true}
+        scrollAnimationDuration={1000}
         data={data}
         renderItem={renderItem}
-        sliderWidth={500}
-        itemWidth={500}
-        loop
       />
     </View>
   );
