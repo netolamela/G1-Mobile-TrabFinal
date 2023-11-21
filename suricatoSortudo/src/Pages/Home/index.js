@@ -22,7 +22,7 @@ export default function Home() {
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <ImageBackground
             source={require("../../assets/logo.png")}
-            style={{ height: 80, width: 80, marginRight: 16 }}
+            style={{ height: 80, width: 80 }}
           ></ImageBackground>
         </TouchableOpacity>
         <Text style={{ fontSize: 30, color: "white", marginRight: 100 }}>

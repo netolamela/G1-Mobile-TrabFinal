@@ -18,11 +18,16 @@ const Carrossel = () => {
   );
 
   return (
-    <View>
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Carousel
         loop
-        width={300}
-        height={300}
+        width={370}
+        height={400}
         autoPlay={true}
         scrollAnimationDuration={1000}
         data={data}
@@ -34,17 +39,17 @@ const Carrossel = () => {
 
 const styles = StyleSheet.create({
   item: {
-    width: 400,
+    width: 350,
     height: 400,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 100,
     backgroundColor: "#d4bf6a",
     borderRadius: 10,
+    marginLeft: 10,
   },
   image: {
-    width: "100%",
-    height: "80%",
+    width: "90%",
+    height: "70%",
     borderRadius: 10,
     marginBottom: 10,
   },
