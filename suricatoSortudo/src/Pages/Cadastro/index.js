@@ -22,7 +22,7 @@ export default function Cadastro() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [mensagemErro, setMensagemErro] = useState('');
 
-  const handleCadastro = async () => {
+  const lidarComPressionarCadastro = async () => {
     if (!usuario || !senha || !confirmaSenha) {
       setMensagemErro('Preencha todos os campos para cadastrar.');
     } else if (senha !== confirmaSenha) {
@@ -75,7 +75,7 @@ export default function Cadastro() {
           <InputComIcone icone="user" placeholder="Digite seu usuário" placeholderTextColor="#808080" onChangeText={setUsuario} />
           <InputComIcone icone="lock" placeholder="Digite sua senha" secureTextEntry placeholderTextColor="#808080" onChangeText={setSenha} />
           <InputComIcone icone="lock" placeholder="Confirme sua senha" secureTextEntry placeholderTextColor="#808080" onChangeText={setConfirmaSenha} />
-          <TouchableOpacity style={styles.botaoCadastro} onPress={handleCadastro}>
+          <TouchableOpacity style={styles.botaoCadastro} onPress={lidarComPressionarCadastro}>
             <Text style={styles.textoBotao}>Cadastrar</Text>
           </TouchableOpacity>
           {mensagemErro ? (
