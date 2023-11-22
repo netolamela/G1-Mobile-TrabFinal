@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Alert , Modal, Image} from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Alert, Modal, Image } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Admin() {
-    
-    const navigation = useNavigation();
-    const [accounts, setAccounts] = useState([]);
-    const [selectedAccount, setSelectedAccount] = useState(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
-
+  const navigation = useNavigation();
+  const [accounts, setAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchAccounts = async () => {
     try {
@@ -27,9 +24,9 @@ export default function Admin() {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       fetchAccounts();
-  } );
-  return unsubscribe;
-}, [navigation]);
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const handleDeleteAccount = async (accountId) => {
     setSelectedAccount(accountId);
@@ -47,50 +44,48 @@ export default function Admin() {
       console.error('Erro ao excluir conta:', error);
       Alert.alert('Erro', 'Falha ao excluir conta. Por favor, tente novamente.');
     }
-  }; 
+  };
 
-  
   const closeModal = () => {
     setIsModalVisible(false);
     setSelectedAccount(null);
   };
 
-
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/fundo.png')} style={styles.backgroundImage} />
-    <TouchableOpacity onPress={() => navigation.navigate("Home")} style={[styles.backButton,{margin:20, marginTop:20}]}>
-      <Icon name="arrow-left" size={25} color="white" />
-    </TouchableOpacity>
-    <Text style={styles.header}>Menu de Administrar contas</Text>
-    <FlatList
-      data={accounts}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={styles.accountItem}>
-          <Text style={styles.userName}>{`${item.user} - ${item.grupo}`}</Text>
-          <TouchableOpacity onPress={() => handleDeleteAccount(item.id)}>
-            <Text style={styles.deleteButton}>Excluir Conta</Text>
-          </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Home")} style={[styles.backButton, { margin: 20, marginTop: 20 }]}>
+        <Icon name="arrow-left" size={25} color="white" />
+      </TouchableOpacity>
+      <Text style={styles.header}>Menu de Administrar Contas</Text>
+      <FlatList
+        data={accounts}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.accountItem}>
+            <Text style={styles.userName}>{`${item.user} - ${item.grupo}`}</Text>
+            <TouchableOpacity onPress={() => handleDeleteAccount(item.id)}>
+              <Text style={styles.deleteButton}>Excluir Conta</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Deseja realmente excluir esta conta?</Text>
+            <TouchableOpacity onPress={confirmDeleteAccount} style={styles.confirmButton}>
+              <Text style={styles.confirmButtonText}>Sim</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={closeModal} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      )}
-    />
-     
-    <Modal visible={isModalVisible} transparent animationType="slide">
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>Deseja realmente excluir esta conta?</Text>
-          <TouchableOpacity onPress={confirmDeleteAccount} style={styles.confirmButton}>
-            <Text style={styles.confirmButtonText}>Sim</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={closeModal} style={styles.cancelButton}>
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
-  </View>
-);
+      </Modal>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -176,5 +171,4 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
- 
 });

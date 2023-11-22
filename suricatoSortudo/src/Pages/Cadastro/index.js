@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,  Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
-const InputWithIcon = ({ icon, ...props }) => {
+const InputComIcone = ({ icone, ...props }) => {
   return (
-    <View style={[styles.inputContainer, { backgroundColor: 'white', marginBottom: 16, width: 300, alignSelf: 'center' }]}>
-      <Icon name={icon} size={20} color="#808080" style={styles.icon} />
+    <View style={[styles.containerInput, { backgroundColor: 'white', marginBottom: 16, width: 300, alignSelf: 'center' }]}>
+      <Icon name={icone} size={20} color="#808080" style={styles.icone} />
       <TextInput {...props} style={styles.input} />
     </View>
   );
@@ -16,87 +16,86 @@ const InputWithIcon = ({ icon, ...props }) => {
 export default function Cadastro() {
 
   const navigation = useNavigation();
-  const [user, setUser] = useState('');
+  const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmaSenha, setConfirmaSenha] = useState('');
-  const [residenciaConfirm, setResidenciaConfirm] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [mensagemErro, setMensagemErro] = useState('');
 
   const handleCadastro = async () => {
-    if (!user || !senha || !confirmaSenha) {
-      setErrorMessage('Preencha todos os campos para cadastrar.');
+    if (!usuario || !senha || !confirmaSenha) {
+      setMensagemErro('Preencha todos os campos para cadastrar.');
     } else if (senha !== confirmaSenha) {
-      setErrorMessage('As senhas não coincidem. Tente novamente.');
+      setMensagemErro('As senhas não coincidem. Tente novamente.');
     } else {
-      const userExists = await checkUserExists(user);
+      const usuarioExiste = await verificarUsuarioExiste(usuario);
 
-      if (userExists) {
-        setErrorMessage('Este usuário já existe. Tente outro.');
+      if (usuarioExiste) {
+        setMensagemErro('Este usuário já existe. Tente outro.');
       } else {
         try {
-          const response = await axios.post('https://655ac5066981238d054db51e.mockapi.io/login/usuarios', {
-            user,
-            senha,
+          const resposta = await axios.post('https://655ac5066981238d054db51e.mockapi.io/login/usuarios', {
+            user: usuario,
+            senha: senha,
             grupo: 'funcionario',
           });
           setIsModalVisible(true);
-        } catch (error) {
-          setErrorMessage('Falha ao cadastrar. Por favor, tente novamente.');
+        } catch (erro) {
+          setMensagemErro('Falha ao cadastrar. Por favor, tente novamente.');
         }
       }
     }
   };
 
-  const closeModal = () => {
+  const fecharModal = () => {
     setIsModalVisible(false);
-    setErrorMessage('');
+    setMensagemErro('');
     navigation.navigate('Home');
   };
 
-  const checkUserExists = async (username) => {
+  const verificarUsuarioExiste = async (nomeUsuario) => {
     try {
-      const response = await axios.get(`https://655ac5066981238d054db51e.mockapi.io/login/usuarios?user=${username}`);
-      return response.data.length > 0;
-    } catch (error) {
-      console.log('Erro ao verificar usuário:', error);
+      const resposta = await axios.get(`https://655ac5066981238d054db51e.mockapi.io/login/usuarios?user=${nomeUsuario}`);
+      return resposta.data.length > 0;
+    } catch (erro) {
+      console.log('Erro ao verificar usuário:', erro);
       return false;
     }
   };
-  
+
   return (
     <View style={styles.container}>
-    <Image source={require('../../assets/fundo.png')} style={styles.backgroundImage} />
-    <Image source={require('../../assets/logo.png')} style={styles.logo} />
-    <TouchableOpacity onPress={() => navigation.navigate('Admin')} style={styles.backButton}>
-      <Icon name="arrow-left" size={25} color="white" />
-    </TouchableOpacity>
-    <View style={styles.signup}>
-      <View style={[styles.inputs, { marginTop: 10 }]}>
-        <InputWithIcon icon="user" placeholder="Digite seu usuário" placeholderTextColor="#808080" onChangeText={setUser} />
-        <InputWithIcon icon="lock" placeholder="Digite sua senha" secureTextEntry placeholderTextColor="#808080" onChangeText={setSenha} />
-        <InputWithIcon icon="lock" placeholder="Confirme sua senha" secureTextEntry placeholderTextColor="#808080" onChangeText={setConfirmaSenha} />
-        <TouchableOpacity style={styles.signupButton} onPress={handleCadastro}>
-          <Text style={styles.buttonText}>Cadastrar</Text>
-        </TouchableOpacity>
-        {errorMessage ? (
-          <Text style={styles.errorMessage}>{errorMessage}</Text>
-        ) : null}
-      </View>
-    </View>
-
-    <Modal visible={isModalVisible} transparent animationType="slide">
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>Você cadastrou uma nova conta!</Text>
-          <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Retorne para Home</Text>
+      <Image source={require('../../assets/fundo.png')} style={styles.imagemFundo} />
+      <Image source={require('../../assets/logo.png')} style={styles.logo} />
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.botaoVoltar}>
+        <Icon name="arrow-left" size={25} color="white" />
+      </TouchableOpacity>
+      <View style={styles.cadastro}>
+        <View style={[styles.campos, { marginTop: 10 }]}>
+          <InputComIcone icone="user" placeholder="Digite seu usuário" placeholderTextColor="#808080" onChangeText={setUsuario} />
+          <InputComIcone icone="lock" placeholder="Digite sua senha" secureTextEntry placeholderTextColor="#808080" onChangeText={setSenha} />
+          <InputComIcone icone="lock" placeholder="Confirme sua senha" secureTextEntry placeholderTextColor="#808080" onChangeText={setConfirmaSenha} />
+          <TouchableOpacity style={styles.botaoCadastro} onPress={handleCadastro}>
+            <Text style={styles.textoBotao}>Cadastrar</Text>
           </TouchableOpacity>
+          {mensagemErro ? (
+            <Text style={styles.mensagemErro}>{mensagemErro}</Text>
+          ) : null}
         </View>
       </View>
-    </Modal>
-  </View>
- );
+
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <View style={styles.containerModal}>
+          <View style={styles.conteudoModal}>
+            <Text style={styles.textoModal}>Você cadastrou uma nova conta!</Text>
+            <TouchableOpacity onPress={fecharModal} style={styles.botaoFechar}>
+              <Text style={styles.textoBotaoFechar}>Retorne para Home</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backgroundImage: {
+  imagemFundo: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -122,16 +121,16 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
   },
-  backButton: {
+  botaoVoltar: {
     position: 'absolute',
     top: 20,
     left: 20,
     padding: 10,
   },
-  inputs: {
+  campos: {
     marginTop: 50,
   },
-  inputContainer: {
+  containerInput: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
@@ -140,7 +139,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 16,
   },
-  icon: {
+  icone: {
     marginRight: 10,
   },
   input: {
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 200,
   },
-  signup: {
+  cadastro: {
     width: '80%',
     borderRadius: 25,
     backgroundColor: '#D4BF6A',
@@ -159,7 +158,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     padding: 20,
   },
-  signupButton: {
+  botaoCadastro: {
     backgroundColor: 'green',
     padding: 10,
     borderRadius: 100,
@@ -167,45 +166,38 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  buttonText: {
+  textoBotao: {
     color: 'white',
     fontSize: 18,
   },
-  returnToLoginContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  errorMessage: {
+  mensagemErro: {
     color: 'red',
     marginTop: 10,
     textAlign: 'center',
   },
-  modalContainer: {
+  containerModal: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContent: {
+  conteudoModal: {
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
   },
-  modalText: {
+  textoModal: {
     fontSize: 18,
     marginBottom: 20,
   },
-  closeButton: {
+  botaoFechar: {
     backgroundColor: 'green',
     padding: 10,
     borderRadius: 5,
   },
-  closeButtonText: {
+  textoBotaoFechar: {
     color: 'white',
     fontSize: 16,
   },
-  
-  
 });
