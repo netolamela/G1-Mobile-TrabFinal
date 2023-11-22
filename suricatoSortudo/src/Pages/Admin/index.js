@@ -96,11 +96,8 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "120%",
+    height: "120%",
   },
   header: {
     backgroundColor: '#0C432E',
