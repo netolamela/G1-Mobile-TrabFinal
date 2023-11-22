@@ -6,15 +6,15 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Admin() {
   const navigation = useNavigation();
-  const [accounts, setAccounts] = useState([]);
-  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [contas, setContas] = useState([]);
+  const [contaSelecionada, setContaSelecionada] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const fetchAccounts = async () => {
+  const buscarContas = async () => {
     try {
       const response = await axios.get('https://655ac5066981238d054db51e.mockapi.io/login/usuarios');
-      const filteredAccounts = response.data.filter(account => account.id !== 1);
-      setAccounts(filteredAccounts);
+      const contasFiltradas = response.data.filter(conta => conta.id !== 1);
+      setContas(contasFiltradas);
     } catch (error) {
       console.error('Erro ao obter contas:', error);
       Alert.alert('Erro', 'Falha ao obter contas. Por favor, tente novamente.');
@@ -23,22 +23,22 @@ export default function Admin() {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      fetchAccounts();
+      buscarContas();
     });
     return unsubscribe;
   }, [navigation]);
 
-  const handleDeleteAccount = async (accountId) => {
-    setSelectedAccount(accountId);
+  const handleExcluirConta = async (idConta) => {
+    setContaSelecionada(idConta);
     setIsModalVisible(true);
   };
 
-  const confirmDeleteAccount = async () => {
+  const confirmarExclusaoConta = async () => {
     try {
-      await axios.delete(`https://655ac5066981238d054db51e.mockapi.io/login/usuarios/${selectedAccount}`);
-      fetchAccounts();
+      await axios.delete(`https://655ac5066981238d054db51e.mockapi.io/login/usuarios/${contaSelecionada}`);
+      buscarContas();
       setIsModalVisible(false);
-      setSelectedAccount(null);
+      setContaSelecionada(null);
       Alert.alert('Sucesso', 'Conta excluída com sucesso.');
     } catch (error) {
       console.error('Erro ao excluir conta:', error);
@@ -46,26 +46,26 @@ export default function Admin() {
     }
   };
 
-  const closeModal = () => {
+  const fecharModal = () => {
     setIsModalVisible(false);
-    setSelectedAccount(null);
+    setContaSelecionada(null);
   };
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/fundo.png')} style={styles.backgroundImage} />
-      <TouchableOpacity onPress={() => navigation.navigate("Home")} style={[styles.backButton, { margin: 20, marginTop: 20 }]}>
+      <Image source={require('../../assets/fundo.png')} style={styles.imagemFundo} />
+      <TouchableOpacity onPress={() => navigation.navigate("Home")} style={[styles.botaoVoltar, { margin: 20, marginTop: 20 }]}>
         <Icon name="arrow-left" size={25} color="white" />
       </TouchableOpacity>
-      <Text style={styles.header}>Menu de Administrar Contas</Text>
+      <Text style={styles.cabecalho}>Menu de Administrar Contas</Text>
       <FlatList
-        data={accounts}
+        data={contas}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.accountItem}>
-            <Text style={styles.userName}>{`${item.user} - ${item.grupo}`}</Text>
-            <TouchableOpacity onPress={() => handleDeleteAccount(item.id)}>
-              <Text style={styles.deleteButton}>Excluir Conta</Text>
+          <View style={styles.itemConta}>
+            <Text style={styles.nomeUsuario}>{`${item.user} - ${item.grupo}`}</Text>
+            <TouchableOpacity onPress={() => handleExcluirConta(item.id)}>
+              <Text style={styles.botaoExcluir}>Excluir Conta</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -73,13 +73,13 @@ export default function Admin() {
 
       <Modal visible={isModalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Deseja realmente excluir esta conta?</Text>
-            <TouchableOpacity onPress={confirmDeleteAccount} style={styles.confirmButton}>
-              <Text style={styles.confirmButtonText}>Sim</Text>
+          <View style={styles.modalConteudo}>
+            <Text style={styles.textoModal}>Deseja realmente excluir esta conta?</Text>
+            <TouchableOpacity onPress={confirmarExclusaoConta} style={styles.botaoConfirmar}>
+              <Text style={styles.textoBotaoConfirmar}>Sim</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={closeModal} style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Cancelar</Text>
+            <TouchableOpacity onPress={fecharModal} style={styles.botaoCancelar}>
+              <Text style={styles.textoBotaoCancelar}>Cancelar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#BD7834',
     padding: 20,
   },
-  backgroundImage: {
+  imagemFundo: {
     position: 'absolute',
     width: "120%",
     height: "120%",
   },
-  header: {
+  cabecalho: {
     backgroundColor: '#0C432E',
     borderRadius: 20,
     width: "100%",
@@ -111,18 +111,18 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     textAlign: 'center',
   },
-  accountItem: {
+  itemConta: {
     backgroundColor: 'white',
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
   },
-  deleteButton: {
+  botaoExcluir: {
     color: 'red',
     marginTop: 8,
     textDecorationLine: 'underline',
   },
-  userName: {
+  nomeUsuario: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
@@ -133,19 +133,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContent: {
+  modalConteudo: {
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 8,
     width: '80%',
     alignItems: 'center',
   },
-  modalText: {
+  textoModal: {
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center',
   },
-  confirmButton: {
+  botaoConfirmar: {
     backgroundColor: 'red',
     padding: 10,
     borderRadius: 8,
@@ -153,18 +153,18 @@ const styles = StyleSheet.create({
     width: '60%',
     alignItems: 'center',
   },
-  confirmButtonText: {
+  textoBotaoConfirmar: {
     color: 'white',
     fontSize: 16,
   },
-  cancelButton: {
+  botaoCancelar: {
     backgroundColor: 'gray',
     padding: 10,
     borderRadius: 8,
     width: '60%',
     alignItems: 'center',
   },
-  cancelButtonText: {
+  textoBotaoCancelar: {
     color: 'white',
     fontSize: 16,
   },
