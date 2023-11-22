@@ -11,12 +11,14 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import ModalDetalhes from "../../Components/modalDetalhes";
 import ModalAddProduto from "../../Components/modalAddProduto";
+import ModalEditProduto from "../../Components/modalEditProduto";
 
 export default function Produtos() {
   const [pesquisa, setPesquisa] = useState("");
   const [produtos, setProdutos] = useState([]);
   const [modalDetalheVisivel, setModalDetalheVisivel] = useState(false);
   const [modalAddVisivel, setModalAddVisivel] = useState(false);
+  const [modalEditVisivel, setModalEditVisivel] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   //const [produto, setProduto] = useState({});
 
@@ -61,6 +63,21 @@ export default function Produtos() {
       alert("Erro ao cadastrar o produto: ", error);
     }
   };
+
+  const handleEditarProduto = (produtoEditado) => {
+    try {
+      setProdutos((prevProdutos) => {
+        return prevProdutos.map((produto) =>
+          produto.id === produtoEditado.id ? produtoEditado : produto
+        );
+      });
+      setModalEditVisivel(false);
+      setProdutoSelecionado(null);
+    } catch (error) {
+      alert("Erro ao cadastrar o produto: ", error);
+    }
+  };
+
   const handleDeleteProduto = async (id) => {
     try {
       const response = await fetch(
@@ -74,6 +91,7 @@ export default function Produtos() {
       }
 
       setProdutos(produtos.filter((produto) => produto.id !== id));
+      alert("Produto deletado com sucesso!");
     } catch (error) {
       alert("Erro ao deletar o produto:", error);
     }
@@ -93,13 +111,16 @@ export default function Produtos() {
             style={styles.botao2}
             onPress={() => handleDeleteProduto(item.id)}
           >
-            <FontAwesome name="trash" size={30} color="white" padding={8} />
+            <FontAwesome name="trash" size={30} color="#0C432E" padding={8} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botao2}>
+          <TouchableOpacity
+            style={styles.botao2}
+            onPress={() => handleEditarProduto(item.id)}
+          >
             <FontAwesome
               name="edit"
               size={30}
-              color="white"
+              color="#0C432E"
               padding={8}
               textAlign="center"
             />
@@ -117,6 +138,12 @@ export default function Produtos() {
         onAdicionarProduto={handleAdicionarProduto}
         setProdutos={setProdutos}
         produtos={produtos}
+      />
+      <ModalEditProduto
+        isVisible={modalEditVisivel}
+        onClose={() => setModalEditVisivel(false)}
+        onEditarProduto={handleEditarProduto}
+        produto={produtoSelecionado}
       />
     </TouchableOpacity>
   );
@@ -215,8 +242,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   botao2: {
-    backgroundColor: "#0C432E",
+    backgroundColor: "#E2E2AC",
     borderColor: "#0C432E",
+    borderWidth: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

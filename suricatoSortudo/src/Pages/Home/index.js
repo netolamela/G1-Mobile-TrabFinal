@@ -25,9 +25,7 @@ export default function Home() {
             style={{ height: 80, width: 80 }}
           ></ImageBackground>
         </TouchableOpacity>
-        <Text style={{ fontSize: 30, color: "white", marginRight: 100 }}>
-          Suricato Sortudo
-        </Text>
+        <Text style={{ fontSize: 30, color: "white" }}>Suricato Sortudo</Text>
       </View>
       <Text style={styles.titulo}>Novidades</Text>
       <Carrossel />
