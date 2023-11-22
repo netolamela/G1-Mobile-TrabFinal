@@ -10,6 +10,8 @@ import Integrantes from "../../Pages/Integrantes";
 import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawer from "../CustomDrawer";
+import Admin from "../../Pages/Admin";
+import Cadastro from "../../Pages/Cadastro";
 
 const Drawer = createDrawerNavigator();
 
@@ -53,6 +55,27 @@ export default function DrawerNavigate() {
           ),
         }}
       />
+
+      <Drawer.Screen
+        name="Administrar Contas"
+        component={Admin}
+        options={{
+          drawerIcon: ({ color }) => (
+            <FontAwesome name="user-circle" size={22} color={color} />
+          ),
+        }}
+      />
+      
+       <Drawer.Screen
+          name="Cadastrar Conta"
+          component={Cadastro} 
+          options={{
+            drawerIcon: ({ color }) => (
+              <FontAwesome name="user-plus" size={22} color={color} />
+            ),
+          }}
+        />
+
       <Drawer.Screen
         name="Integrantes"
         component={Integrantes}
