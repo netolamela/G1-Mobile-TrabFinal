@@ -15,22 +15,21 @@ export default function ModalEditProduto({
   onClose,
   produto,
 }) {
-  const [produtoEditado, setProdutoEditado] = useState({});
+  const [produtoEditado, setProdutoEditado] = useState();
 
   useEffect(() => {
     setProdutoEditado(produto || {});
-    console.log(produto.nome);
-  }, []);
+  }, [produto]);
 
   const handleEditarProduto = async () => {
-    const trimmedNome = produtoEditado.nome.trim();
-    const trimmedDescricao = produtoEditado.descricao.trim();
-    const trimmedCategoria = produtoEditado.categoria.trim();
+    const trimmedNome = produtoEditado?.nome.trim();
+    const trimmedDescricao = produtoEditado?.descricao.trim();
+    const trimmedCategoria = produtoEditado?.categoria.trim();
     const trimmedValor =
-      produtoEditado.valor !== undefined && produtoEditado.valor !== null
-        ? String(produtoEditado.valor).trim()
+      produtoEditado?.valor !== undefined && produtoEditado?.valor !== null
+        ? String(produtoEditado?.valor).trim()
         : "";
-    const trimmedImagem = produtoEditado.imagem.trim();
+    const trimmedImagem = produtoEditado?.imagem.trim();
 
     if (
       trimmedNome === "" ||
@@ -44,6 +43,7 @@ export default function ModalEditProduto({
     }
 
     let produto = {
+      id: produtoEditado?.id,
       nome: trimmedNome,
       descricao: trimmedDescricao,
       categoria: trimmedCategoria,
@@ -71,7 +71,7 @@ export default function ModalEditProduto({
           style={styles.input}
           placeholder="Nome do produto"
           placeholderTextColor="black"
-          value={produtoEditado.nome || ""}
+          value={produtoEditado?.nome}
           onChangeText={(text) =>
             setProdutoEditado({ ...produtoEditado, nome: text })
           }
@@ -80,7 +80,7 @@ export default function ModalEditProduto({
           style={styles.input}
           placeholder="Descrição do produto"
           placeholderTextColor="black"
-          value={produtoEditado.descricao}
+          value={produtoEditado?.descricao}
           onChangeText={(text) =>
             setProdutoEditado({ ...produtoEditado, descricao: text })
           }
@@ -89,7 +89,7 @@ export default function ModalEditProduto({
           style={styles.input}
           placeholder="Categoria do produto"
           placeholderTextColor="black"
-          value={produtoEditado.categoria}
+          value={produtoEditado?.categoria}
           onChangeText={(text) =>
             setProdutoEditado({ ...produtoEditado, categoria: text })
           }
@@ -98,7 +98,7 @@ export default function ModalEditProduto({
           style={styles.input}
           placeholder="Valor"
           placeholderTextColor="black"
-          value={produtoEditado.valor ? produtoEditado.valor.toString() : ""}
+          value={produtoEditado?.valor ? produtoEditado?.valor.toString() : ""}
           onChangeText={(text) => {
             setProdutoEditado({ ...produtoEditado, valor: text });
           }}
@@ -108,7 +108,7 @@ export default function ModalEditProduto({
           style={styles.input}
           placeholder="URL da imagem"
           placeholderTextColor="black"
-          value={produtoEditado.imagem}
+          value={produtoEditado?.imagem}
           onChangeText={(text) =>
             setProdutoEditado({ ...produtoEditado, imagem: text })
           }

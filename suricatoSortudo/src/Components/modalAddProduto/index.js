@@ -60,7 +60,7 @@ const ModalAddProduto = ({
         produto
       );
 
-      setProdutos([...produtos, produto]);
+      setProdutos([...produtos, response.data]);
 
       console.log("Produto cadastrado: ", response.data);
 

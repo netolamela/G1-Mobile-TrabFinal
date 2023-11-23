@@ -39,8 +39,8 @@ export default function Produtos() {
 
   const produtosFiltrados = produtos.filter(
     (produto) =>
-      produto.nome &&
-      produto.nome.toLowerCase().includes(pesquisa.toLowerCase())
+      produto?.nome &&
+      produto?.nome.toLowerCase().includes(pesquisa.toLowerCase())
   );
 
   const handleProdutoDetalhe = (produto) => {
@@ -64,6 +64,7 @@ export default function Produtos() {
   };
 
   const handleEditarProduto = async (produtoEditado) => {
+    console.log("editar:", produtoEditado);
     try {
       const response = await fetch(
         `https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos/${produtoEditado.id}`,
@@ -134,8 +135,8 @@ export default function Produtos() {
           <TouchableOpacity
             style={styles.botao2}
             onPress={() => {
+              setProdutoSelecionado(item);
               setModalEditVisivel(true);
-              setProdutoSelecionado(produto);
             }}
           >
             <FontAwesome
@@ -148,24 +149,6 @@ export default function Produtos() {
           </TouchableOpacity>
         </View>
       </View>
-      <ModalDetalhes
-        isVisible={modalDetalheVisivel}
-        produto={produtoSelecionado}
-        onClose={fecharModalDetalhes}
-      />
-      <ModalAddProduto
-        isVisible={modalAddVisivel}
-        onClose={() => setModalAddVisivel(false)}
-        onAdicionarProduto={handleAdicionarProduto}
-        setProdutos={setProdutos}
-        produtos={produtos}
-      />
-      <ModalEditProduto
-        isVisible={modalEditVisivel}
-        onClose={() => setModalEditVisivel(false)}
-        onEditarProduto={handleEditarProduto}
-        produto={produtoSelecionado}
-      />
     </TouchableOpacity>
   );
 
@@ -193,6 +176,26 @@ export default function Produtos() {
         renderItem={renderItem}
         keyExtractor={(item) => item?.id?.toString()}
         style={styles.flatlist}
+      />
+
+      <ModalEditProduto
+        isVisible={modalEditVisivel}
+        onClose={() => setModalEditVisivel(false)}
+        onEditarProduto={handleEditarProduto}
+        produto={produtoSelecionado}
+      />
+
+      <ModalDetalhes
+        isVisible={modalDetalheVisivel}
+        produto={produtoSelecionado}
+        onClose={fecharModalDetalhes}
+      />
+      <ModalAddProduto
+        isVisible={modalAddVisivel}
+        onClose={() => setModalAddVisivel(false)}
+        onAdicionarProduto={handleAdicionarProduto}
+        setProdutos={setProdutos}
+        produtos={produtos}
       />
     </View>
   );
