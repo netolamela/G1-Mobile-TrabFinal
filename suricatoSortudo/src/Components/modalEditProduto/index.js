@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Modal from "react-native-modal";
-import axios from "axios";
 
 export default function ModalEditProduto({
   isVisible,
@@ -16,17 +15,12 @@ export default function ModalEditProduto({
   onClose,
   produto,
 }) {
-  const [produtoEditado, setProdutoEditado] = useState({
-    nome: "produto.nome",
-    descricao: "produto.descricao",
-    categoria: "produto.categoria",
-    valor: "produto.valor",
-    imagem: "produto.imagem",
-  });
+  const [produtoEditado, setProdutoEditado] = useState({});
 
   useEffect(() => {
     setProdutoEditado(produto || {});
-  }, [produto]);
+    console.log(produto.nome);
+  }, []);
 
   const handleEditarProduto = async () => {
     const trimmedNome = produtoEditado.nome.trim();

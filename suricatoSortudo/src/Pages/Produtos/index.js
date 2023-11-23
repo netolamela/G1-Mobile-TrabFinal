@@ -133,7 +133,10 @@ export default function Produtos() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.botao2}
-            onPress={() => setModalEditVisivel(true)}
+            onPress={() => {
+              setModalEditVisivel(true);
+              setProdutoSelecionado(produto);
+            }}
           >
             <FontAwesome
               name="edit"
