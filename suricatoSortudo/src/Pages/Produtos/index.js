@@ -20,7 +20,6 @@ export default function Produtos() {
   const [modalAddVisivel, setModalAddVisivel] = useState(false);
   const [modalEditVisivel, setModalEditVisivel] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
-  //const [produto, setProduto] = useState({});
 
   useEffect(() => {
     const buscarProduto = async () => {
@@ -64,17 +63,36 @@ export default function Produtos() {
     }
   };
 
-  const handleEditarProduto = (produtoEditado) => {
+  const handleEditarProduto = async (produtoEditado) => {
     try {
+      const response = await fetch(
+        `https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos/${produtoEditado.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(produtoEditado),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar o produto");
+      }
+
       setProdutos((prevProdutos) => {
         return prevProdutos.map((produto) =>
           produto.id === produtoEditado.id ? produtoEditado : produto
         );
       });
+
       setModalEditVisivel(false);
       setProdutoSelecionado(null);
+
+      alert("Produto atualizado com sucesso!");
     } catch (error) {
-      alert("Erro ao cadastrar o produto: ", error);
+      console.error("Erro ao atualizar o produto:", error);
+      alert("Erro ao atualizar o produto. Tente novamente.");
     }
   };
 
@@ -115,7 +133,7 @@ export default function Produtos() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.botao2}
-            onPress={() => handleEditarProduto(item.id)}
+            onPress={() => setModalEditVisivel(true)}
           >
             <FontAwesome
               name="edit"

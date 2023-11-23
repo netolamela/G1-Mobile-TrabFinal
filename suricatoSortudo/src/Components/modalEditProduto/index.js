@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-native-modal";
 import axios from "axios";
 
@@ -16,7 +16,17 @@ export default function ModalEditProduto({
   onClose,
   produto,
 }) {
-  const [produtoEditado, setProdutoEditado] = useState(produto || {});
+  const [produtoEditado, setProdutoEditado] = useState({
+    nome: "produto.nome",
+    descricao: "produto.descricao",
+    categoria: "produto.categoria",
+    valor: "produto.valor",
+    imagem: "produto.imagem",
+  });
+
+  useEffect(() => {
+    setProdutoEditado(produto || {});
+  }, [produto]);
 
   const handleEditarProduto = async () => {
     const trimmedNome = produtoEditado.nome.trim();
@@ -48,15 +58,11 @@ export default function ModalEditProduto({
     };
 
     try {
-      const response = await axios.put(
-        `https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos/${produtoEditado.id}`,
-        produto
-      );
-      console.log("Produto atualizado:", response.data);
-      alert("Produto atualizado com sucesso!");
+      // await handleEditarProduto(produtoEditado);
+      // console.log("Produto atualizado:", response.data);
 
       onEditarProduto(produto);
-
+      alert("Produto atualizado com sucesso!");
       onClose();
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
