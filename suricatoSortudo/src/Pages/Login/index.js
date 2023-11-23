@@ -21,7 +21,7 @@ const InputComIcone = ({ icon, ...props }) => {
         {
           backgroundColor: "white",
           marginBottom: 16,
-          width: 300,
+          width: 280,
           alignSelf: "center",
         },
       ]}
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     width: 200,
+    justifyContent: "center",
   },
   botaoLogin: {
     backgroundColor: "green",
