@@ -130,7 +130,7 @@ export default function Produtos() {
             style={styles.botao2}
             onPress={() => handleDeleteProduto(item.id)}
           >
-            <FontAwesome name="trash" size={30} color="#0C432E" padding={8} />
+            <FontAwesome name="trash" size={30} color="#0C432E" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.botao2}
@@ -143,7 +143,6 @@ export default function Produtos() {
               name="edit"
               size={30}
               color="#0C432E"
-              padding={8}
               textAlign="center"
             />
           </TouchableOpacity>
