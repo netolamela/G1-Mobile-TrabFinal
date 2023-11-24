@@ -16,7 +16,8 @@ import StackNavigate from "./stack.route";
 
 const Drawer = createDrawerNavigator();
 
-export default function DrawerNavigate() {
+export default function DrawerNavigate({ route }) {
+  //console.log("Drawer:", route.params.params.username);
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -25,7 +26,7 @@ export default function DrawerNavigate() {
         headerShown: false,
         drawerLabelStyle: { marginLeft: -25 },
       }}
-      drawerContent={(props) => <CustomDrawer {...props} />}
+      drawerContent={(props) => <CustomDrawer {...props} route={route} />}
       initialRouteName="Home"
     >
       {/* <Drawer.Screen

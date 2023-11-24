@@ -6,8 +6,10 @@ import { Text, View, Image, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const CustomDrawer = (props) => {
+const CustomDrawer = ({ route, ...props }) => {
   const navigation = useNavigation();
+  const usuario = route.params.params.username;
+  //console.log("usuario no custemD:", usuario);
   return (
     <View style={{ flex: 1, backgroundColor: "#0c432e" }}>
       <DrawerContentScrollView {...props}>
@@ -22,7 +24,7 @@ const CustomDrawer = (props) => {
             source={require("../assets/logo.png")}
             style={{ height: 80, width: 80, marginRight: 16 }}
           />
-          <Text style={{ color: "white", fontSize: 18 }}>User123</Text>
+          <Text style={{ color: "white", fontSize: 18 }}>Olá, {usuario}!</Text>
         </View>
         <View>
           <DrawerItemList {...props} />

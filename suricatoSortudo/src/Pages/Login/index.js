@@ -51,7 +51,11 @@ export default function Login() {
       );
 
       if (response.data.length > 0) {
-        navigation.navigate("Drawer", { screen: "Home" });
+        //console.log("Usuário logado:", usuario);
+        navigation.navigate("Drawer", {
+          screen: "Home",
+          params: { username: usuario },
+        });
       } else {
         setMensagemErro(
           "Usuário não encontrado. Por favor, cadastre uma conta ou verifique suas credenciais."
