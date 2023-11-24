@@ -11,14 +11,15 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import ModalDetalhes from "../../Components/modalDetalhes";
 import ModalAddProduto from "../../Components/modalAddProduto";
+import ModalEditProduto from "../../Components/modalEditProduto";
 
 export default function Produtos() {
   const [pesquisa, setPesquisa] = useState("");
   const [produtos, setProdutos] = useState([]);
   const [modalDetalheVisivel, setModalDetalheVisivel] = useState(false);
   const [modalAddVisivel, setModalAddVisivel] = useState(false);
+  const [modalEditVisivel, setModalEditVisivel] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
-  //const [produto, setProduto] = useState({});
 
   useEffect(() => {
     const buscarProduto = async () => {
@@ -38,8 +39,8 @@ export default function Produtos() {
 
   const produtosFiltrados = produtos.filter(
     (produto) =>
-      produto.nome &&
-      produto.nome.toLowerCase().includes(pesquisa.toLowerCase())
+      produto?.nome &&
+      produto?.nome.toLowerCase().includes(pesquisa.toLowerCase())
   );
 
   const handleProdutoDetalhe = (produto) => {
@@ -61,6 +62,41 @@ export default function Produtos() {
       alert("Erro ao cadastrar o produto: ", error);
     }
   };
+
+  const handleEditarProduto = async (produtoEditado) => {
+    console.log("editar:", produtoEditado);
+    try {
+      const response = await fetch(
+        `https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos/${produtoEditado.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(produtoEditado),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar o produto");
+      }
+
+      setProdutos((prevProdutos) => {
+        return prevProdutos.map((produto) =>
+          produto.id === produtoEditado.id ? produtoEditado : produto
+        );
+      });
+
+      setModalEditVisivel(false);
+      setProdutoSelecionado(null);
+
+      alert("Produto atualizado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar o produto:", error);
+      alert("Erro ao atualizar o produto. Tente novamente.");
+    }
+  };
+
   const handleDeleteProduto = async (id) => {
     try {
       const response = await fetch(
@@ -74,6 +110,7 @@ export default function Produtos() {
       }
 
       setProdutos(produtos.filter((produto) => produto.id !== id));
+      alert("Produto deletado com sucesso!");
     } catch (error) {
       alert("Erro ao deletar o produto:", error);
     }
@@ -93,31 +130,24 @@ export default function Produtos() {
             style={styles.botao2}
             onPress={() => handleDeleteProduto(item.id)}
           >
-            <FontAwesome name="trash" size={30} color="white" padding={8} />
+            <FontAwesome name="trash" size={30} color="#0C432E" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botao2}>
+          <TouchableOpacity
+            style={styles.botao2}
+            onPress={() => {
+              setProdutoSelecionado(item);
+              setModalEditVisivel(true);
+            }}
+          >
             <FontAwesome
               name="edit"
               size={30}
-              color="white"
-              padding={8}
+              color="#0C432E"
               textAlign="center"
             />
           </TouchableOpacity>
         </View>
       </View>
-      <ModalDetalhes
-        isVisible={modalDetalheVisivel}
-        produto={produtoSelecionado}
-        onClose={fecharModalDetalhes}
-      />
-      <ModalAddProduto
-        isVisible={modalAddVisivel}
-        onClose={() => setModalAddVisivel(false)}
-        onAdicionarProduto={handleAdicionarProduto}
-        setProdutos={setProdutos}
-        produtos={produtos}
-      />
     </TouchableOpacity>
   );
 
@@ -145,6 +175,26 @@ export default function Produtos() {
         renderItem={renderItem}
         keyExtractor={(item) => item?.id?.toString()}
         style={styles.flatlist}
+      />
+
+      <ModalEditProduto
+        isVisible={modalEditVisivel}
+        onClose={() => setModalEditVisivel(false)}
+        onEditarProduto={handleEditarProduto}
+        produto={produtoSelecionado}
+      />
+
+      <ModalDetalhes
+        isVisible={modalDetalheVisivel}
+        produto={produtoSelecionado}
+        onClose={fecharModalDetalhes}
+      />
+      <ModalAddProduto
+        isVisible={modalAddVisivel}
+        onClose={() => setModalAddVisivel(false)}
+        onAdicionarProduto={handleAdicionarProduto}
+        setProdutos={setProdutos}
+        produtos={produtos}
       />
     </View>
   );
@@ -215,8 +265,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   botao2: {
-    backgroundColor: "#0C432E",
+    backgroundColor: "#E2E2AC",
     borderColor: "#0C432E",
+    borderWidth: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

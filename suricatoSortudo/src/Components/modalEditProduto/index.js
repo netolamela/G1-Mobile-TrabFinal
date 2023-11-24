@@ -1,39 +1,35 @@
-import React, { useState } from "react";
 import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
   Alert,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
 } from "react-native";
+import React, { useState, useEffect } from "react";
 import Modal from "react-native-modal";
-import axios from "axios";
 
-const ModalAddProduto = ({
+export default function ModalEditProduto({
   isVisible,
-  onAdicionarProduto,
+  onEditarProduto,
   onClose,
-  setProdutos,
-  produtos,
-}) => {
-  const [novoProduto, setNovoProduto] = useState({
-    nome: "",
-    descricao: "",
-    categoria: "",
-    valor: null,
-    imagem: "",
-  });
+  produto,
+}) {
+  const [produtoEditado, setProdutoEditado] = useState();
 
-  const handleAdicionarProduto = async () => {
-    const trimmedNome = novoProduto.nome.trim();
-    const trimmedDescricao = novoProduto.descricao.trim();
-    const trimmedCategoria = novoProduto.categoria.trim();
+  useEffect(() => {
+    setProdutoEditado(produto || {});
+  }, [produto]);
+
+  const handleEditarProduto = async () => {
+    const trimmedNome = produtoEditado?.nome.trim();
+    const trimmedDescricao = produtoEditado?.descricao.trim();
+    const trimmedCategoria = produtoEditado?.categoria.trim();
     const trimmedValor =
-      novoProduto.valor !== undefined && novoProduto.valor !== null
-        ? String(novoProduto.valor).trim()
+      produtoEditado?.valor !== undefined && produtoEditado?.valor !== null
+        ? String(produtoEditado?.valor).trim()
         : "";
-    const trimmedImagem = novoProduto.imagem.trim();
+    const trimmedImagem = produtoEditado?.imagem.trim();
 
     if (
       trimmedNome === "" ||
@@ -47,6 +43,7 @@ const ModalAddProduto = ({
     }
 
     let produto = {
+      id: produtoEditado?.id,
       nome: trimmedNome,
       descricao: trimmedDescricao,
       categoria: trimmedCategoria,
@@ -55,27 +52,15 @@ const ModalAddProduto = ({
     };
 
     try {
-      const response = await axios.post(
-        "https://65496be2dd8ebcd4ab2491f6.mockapi.io/produtos",
-        produto
-      );
+      // await handleEditarProduto(produtoEditado);
+      // console.log("Produto atualizado:", response.data);
 
-      setProdutos([...produtos, response.data]);
-
-      console.log("Produto cadastrado: ", response.data);
-
-      onAdicionarProduto({
-        nome: "",
-        descricao: "",
-        categoria: "",
-        valor: null,
-        imagem: "",
-      });
-
+      onEditarProduto(produto);
+      alert("Produto atualizado com sucesso!");
       onClose();
     } catch (error) {
-      console.error("Erro ao cadastrar produto: ", error);
-      Alert.alert("Erro ao cadastrar produto. Tente novamente.");
+      console.error("Erro ao atualizar produto:", error);
+      Alert.alert("Erro ao atualizar o produto. Tente novamente.");
     }
   };
 
@@ -86,36 +71,36 @@ const ModalAddProduto = ({
           style={styles.input}
           placeholder="Nome do produto"
           placeholderTextColor="black"
-          value={novoProduto.nome}
+          value={produtoEditado?.nome}
           onChangeText={(text) =>
-            setNovoProduto({ ...novoProduto, nome: text })
+            setProdutoEditado({ ...produtoEditado, nome: text })
           }
         />
         <TextInput
           style={styles.input}
           placeholder="Descrição do produto"
           placeholderTextColor="black"
-          value={novoProduto.descricao}
+          value={produtoEditado?.descricao}
           onChangeText={(text) =>
-            setNovoProduto({ ...novoProduto, descricao: text })
+            setProdutoEditado({ ...produtoEditado, descricao: text })
           }
         />
         <TextInput
           style={styles.input}
           placeholder="Categoria do produto"
           placeholderTextColor="black"
-          value={novoProduto.categoria}
+          value={produtoEditado?.categoria}
           onChangeText={(text) =>
-            setNovoProduto({ ...novoProduto, categoria: text })
+            setProdutoEditado({ ...produtoEditado, categoria: text })
           }
         />
         <TextInput
           style={styles.input}
           placeholder="Valor"
           placeholderTextColor="black"
-          value={novoProduto.valor ? novoProduto.valor.toString() : ""}
+          value={produtoEditado?.valor ? produtoEditado?.valor.toString() : ""}
           onChangeText={(text) => {
-            setNovoProduto({ ...novoProduto, valor: text });
+            setProdutoEditado({ ...produtoEditado, valor: text });
           }}
           keyboardType="numeric"
         />
@@ -123,13 +108,13 @@ const ModalAddProduto = ({
           style={styles.input}
           placeholder="URL da imagem"
           placeholderTextColor="black"
-          value={novoProduto.imagem}
+          value={produtoEditado?.imagem}
           onChangeText={(text) =>
-            setNovoProduto({ ...novoProduto, imagem: text })
+            setProdutoEditado({ ...produtoEditado, imagem: text })
           }
         />
-        <TouchableOpacity style={styles.botao} onPress={handleAdicionarProduto}>
-          <Text style={styles.textoBotao}>Adicionar Produto</Text>
+        <TouchableOpacity style={styles.botao} onPress={handleEditarProduto}>
+          <Text style={styles.textoBotao}>Salvar Edição</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.botao} onPress={onClose}>
@@ -138,7 +123,7 @@ const ModalAddProduto = ({
       </View>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -175,5 +160,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
-export default ModalAddProduto;

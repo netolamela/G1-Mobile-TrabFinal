@@ -10,24 +10,14 @@ export default function Home() {
   const navigation = useNavigation();
   return (
     <ScrollView style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
-          marginTop: 30,
-          backgroundColor: "#bd7834",
-        }}
-      >
+      <View style={styles.topoContainer}>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <ImageBackground
             source={require("../../assets/logo.png")}
             style={{ height: 80, width: 80 }}
           ></ImageBackground>
         </TouchableOpacity>
-        <Text style={{ fontSize: 30, color: "white", marginRight: 100 }}>
-          Suricato Sortudo
-        </Text>
+        <Text style={styles.nomePagina}>Suricato Sortudo</Text>
       </View>
       <Text style={styles.titulo}>Novidades</Text>
       <Carrossel />
@@ -76,5 +66,18 @@ const styles = StyleSheet.create({
   texto: {
     fontSize: 15,
     textAlign: "center",
+  },
+  topoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0C432E",
+    justifyContent: "space-around",
+    marginTop: 30,
+    flex: 1,
+  },
+  nomePagina: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "white",
   },
 });
